@@ -54,7 +54,7 @@ class MetaDetaSettings(ABC):
                 creator: str,
                 version: str,
                 source: str,
-                tags: str,
+                tags: str=None,
                 title_unicode: str=None,
                 artist_unicode: str=None,
                 beatmap_i_d: int=None,

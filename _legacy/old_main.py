@@ -8,11 +8,11 @@ import os
 import math
 import sys
 
-directory = 'songs/ANiMA/'
+directory = "songs/ANiMA/"
 fileName = "xi - ANiMA [4K Lv.4].osu"
 
-keypositions = Maploader.Maploader().load_keyposition(directory + fileName)
-notelist = Maploader.Maploader().load_notes(directory + fileName, keypositions)
+keypositions = Maploader.MapLoader().load_keyposition(directory + fileName)
+notelist = Maploader.MapLoader().load_notes(directory + fileName, keypositions)
 
 k1list = []  # 생성된 노트 리스트
 k2list = []  # 생성된 노트 리스트
@@ -20,34 +20,44 @@ k3list = []  # 생성된 노트 리스트
 k4list = []  # 생성된 노트 리스트
 
 gametime = 0  # 게임 플레이 시간
-exposure_time = 0  # 판정의 노출 시간
+last_accuracy_exposure_time = 0  # 판정의 노출 시간
 running = True
-notepng1 = pg.image.load('skin/mania-note1.png')  # 노트 리소스
-notepng2 = pg.image.load('skin/mania-note2.png')  # 노트 리소스
-notepng3 = pg.image.load('skin/mania-note2.png')  # 노트 리소스
-notepng4 = pg.image.load('skin/mania-note1.png')  # 노트 리소스
-stageright = pg.image.load('skin/mania-stage-right.png')  # UI 리소스
-stageleft = pg.image.load('skin/mania-stage-left.png')  # UI 리소스
-stagehint = pg.image.load('skin/mania-stage-hint.png')  # 판정선 리소스
-hit0 = pg.image.load('skin/mania-hit0.png')  # hit 0 리소스
-hit50 = pg.image.load('skin/mania-hit50.png')  # hit 50 리소스
-hit100 = pg.image.load('skin/mania-hit100.png')  # hit 100 리소스
-hit200 = pg.image.load('skin/mania-hit200.png')  # hit 200 리소스
-hit300 = pg.image.load('skin/mania-hit300.png')  # hit 300 리소스
-hit300g = pg.image.load('skin/mania-hit300g-0.png')  # hit 300g 리소스
+notepng1 = pg.image.load("../skin/mania-note1.png")  # 노트 리소스
+notepng2 = pg.image.load("../skin/mania-note2.png")  # 노트 리소스
+notepng3 = pg.image.load("../skin/mania-note2.png")  # 노트 리소스
+notepng4 = pg.image.load("../skin/mania-note1.png")  # 노트 리소스
+stageright = pg.image.load("../skin/mania-stage-right.png")  # UI 리소스
+stageleft = pg.image.load("../skin/mania-stage-left.png")  # UI 리소스
+stagehint = pg.image.load("../skin/mania-stage-hint.png")  # 판정선 리소스
+hit0 = pg.image.load("../skin/mania-hit0.png")  # hit 0 리소스
+hit50 = pg.image.load("../skin/mania-hit50.png")  # hit 50 리소스
+hit100 = pg.image.load("../skin/mania-hit100.png")  # hit 100 리소스
+hit200 = pg.image.load("../skin/mania-hit200.png")  # hit 200 리소스
+hit300 = pg.image.load("../skin/mania-hit300.png")  # hit 300 리소스
+hit300g = pg.image.load("../skin/mania-hit300g-0.png")  # hit 300g 리소스
 
-score0 = pg.image.load('skin/score0.png')  # 숫자 이미지
-score1 = pg.image.load('skin/score1.png')  # 숫자 이미지
-score2 = pg.image.load('skin/score2.png')  # 숫자 이미지
-score3 = pg.image.load('skin/score3.png')  # 숫자 이미지
-score4 = pg.image.load('skin/score4.png')  # 숫자 이미지
-score5 = pg.image.load('skin/score5.png')  # 숫자 이미지
-score6 = pg.image.load('skin/score6.png')  # 숫자 이미지
-score7 = pg.image.load('skin/score7.png')  # 숫자 이미지
-score8 = pg.image.load('skin/score8.png')  # 숫자 이미지
-score9 = pg.image.load('skin/score9.png')  # 숫자 이미지
-scores = [score0, score1, score2, score3, score4,
-          score5, score6, score7, score8, score9]
+score0 = pg.image.load("../skin/score0.png")  # 숫자 이미지
+score1 = pg.image.load("../skin/score1.png")  # 숫자 이미지
+score2 = pg.image.load("../skin/score2.png")  # 숫자 이미지
+score3 = pg.image.load("../skin/score3.png")  # 숫자 이미지
+score4 = pg.image.load("../skin/score4.png")  # 숫자 이미지
+score5 = pg.image.load("../skin/score5.png")  # 숫자 이미지
+score6 = pg.image.load("../skin/score6.png")  # 숫자 이미지
+score7 = pg.image.load("../skin/score7.png")  # 숫자 이미지
+score8 = pg.image.load("../skin/score8.png")  # 숫자 이미지
+score9 = pg.image.load("../skin/score9.png")  # 숫자 이미지
+scores = [
+    score0,
+    score1,
+    score2,
+    score3,
+    score4,
+    score5,
+    score6,
+    score7,
+    score8,
+    score9,
+]
 
 noteobject1 = pg.transform.scale(notepng1, (150, 50))  # 노트 오브젝트 생성
 noteobject2 = pg.transform.scale(notepng2, (150, 50))  # 노트 오브젝트 생성
@@ -74,7 +84,7 @@ MaxScore = 1000000  # 최대 점수
 last_hit = hit0  # 현재 판정
 Bonus = 100
 combo = 0
-perfectpos = 800  # 판정 선
+perfect_position = 800  # 판정 선
 duration = 400  # 노트 이동속도 (*이동에 걸리는 시간)
 pressedkey = [False, False, False, False]  # 키 입력 체크 (추후 사용)
 
@@ -102,14 +112,17 @@ def EXscore(MaxScore, TotalNotes, Judgement):
         Bonus = 100
     elif Bonus < 0:
         Bonus = 0
-    BonusScore = (MaxScore * 0.5 / TotalNotes) * \
-        (Hit[2] * math.sqrt(Bonus) / 320)
+    BonusScore = (MaxScore * 0.5 / TotalNotes) * (Hit[2] * math.sqrt(Bonus) / 320)
     Score = BaseScore + BonusScore
     return Score
 
 
 def getmiddle_nums(target_digit, all_digit):
-    return 608 / 2 - (score0.get_width() / 2) * all_digit + target_digit * score0.get_width()
+    return (
+        608 / 2
+        - (score0.get_width() / 2) * all_digit
+        + target_digit * score0.get_width()
+    )
 
 
 def getmiddle_img(img):
@@ -139,13 +152,15 @@ while running:
         elif event.type == pg.KEYDOWN and event.key == pg.K_r:
             if isPlay:
                 pg.mixer.music.stop()
-                notelist = Maploader.Maploader().load_notes(directory + fileName, keypositions)
+                notelist = Maploader.MapLoader().load_notes(
+                    directory + fileName, keypositions
+                )
                 k1list = []
                 k2list = []
                 k3list = []
                 k4list = []
                 gametime = 0
-                exposure_time = 0
+                last_accuracy_exposure_time = 0
                 score = 0
                 Bonus = 100
                 combo = 0
@@ -157,39 +172,39 @@ while running:
             pressedkey[0] = True
             if len(k1list) != 0:  # 16.5 ms 내
                 inputtime = gametime - k1list[0].starttime
-                if inputtime <= 16.5 and inputtime >= - 16.5:
+                if inputtime <= 16.5 and inputtime >= -16.5:
                     print("MAX / ", inputtime)
                     last_hit = hit300g
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "MAX"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "MAX")
                     combo += 1
                     k1list.pop(0)
-                elif inputtime <= 37.5 and inputtime >= - 37.5:
+                elif inputtime <= 37.5 and inputtime >= -37.5:
                     print("300 / ", inputtime)
                     last_hit = hit300
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "300"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "300")
                     combo += 1
                     k1list.pop(0)
-                elif inputtime <= 70.5 and inputtime >= - 70.5:
+                elif inputtime <= 70.5 and inputtime >= -70.5:
                     print("200 / ", inputtime)
                     last_hit = hit200
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "200"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "200")
                     combo += 1
                     k1list.pop(0)
-                elif inputtime <= 100.5 and inputtime >= - 100.5:
+                elif inputtime <= 100.5 and inputtime >= -100.5:
                     print("100 / ", inputtime)
                     last_hit = hit100
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "100"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "100")
                     combo += 1
                     k1list.pop(0)
-                elif inputtime <= 124.5 and inputtime >= - 124.5:
+                elif inputtime <= 124.5 and inputtime >= -124.5:
                     print("50 / ", inputtime)
                     last_hit = hit50
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "50"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "50")
                     combo += 1
                     k1list.pop(0)
             print(score)
@@ -198,39 +213,39 @@ while running:
             pressedkey[1] = True
             if len(k2list) != 0:  # 16.5 ms 내
                 inputtime = gametime - k2list[0].starttime
-                if inputtime <= 16.5 and inputtime >= - 16.5:
+                if inputtime <= 16.5 and inputtime >= -16.5:
                     print("MAX / ", inputtime)
                     last_hit = hit300g
-                    exposure_time = 500
+                    last_accuracy_exposure_time = 500
                     score += EXscore(MaxScore, TotalNotes, "MAX")
                     combo += 1
                     k2list.pop(0)
-                elif inputtime <= 37.5 and inputtime >= - 37.5:
+                elif inputtime <= 37.5 and inputtime >= -37.5:
                     print("300 / ", inputtime)
                     last_hit = hit300
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "300"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "300")
                     combo += 1
                     k2list.pop(0)
-                elif inputtime <= 70.5 and inputtime >= - 70.5:
+                elif inputtime <= 70.5 and inputtime >= -70.5:
                     print("200 / ", inputtime)
                     last_hit = hit200
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "200"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "200")
                     combo += 1
                     k2list.pop(0)
-                elif inputtime <= 100.5 and inputtime >= - 100.5:
+                elif inputtime <= 100.5 and inputtime >= -100.5:
                     print("100 / ", inputtime)
                     last_hit = hit100
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "100"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "100")
                     combo += 1
                     k2list.pop(0)
-                elif inputtime <= 124.5 and inputtime >= - 124.5:
+                elif inputtime <= 124.5 and inputtime >= -124.5:
                     print("50 / ", inputtime)
                     last_hit = hit50
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "50"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "50")
                     combo += 1
                     k2list.pop(0)
             print(score)
@@ -240,39 +255,39 @@ while running:
             pressedkey[2] = True
             if len(k3list) != 0:  # 16.5 ms 내
                 inputtime = gametime - k3list[0].starttime
-                if inputtime <= 16.5 and inputtime >= - 16.5:
+                if inputtime <= 16.5 and inputtime >= -16.5:
                     print("MAX / ", inputtime)
                     last_hit = hit300g
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "MAX"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "MAX")
                     combo += 1
                     k3list.pop(0)
-                elif inputtime <= 37.5 and inputtime >= - 37.5:
+                elif inputtime <= 37.5 and inputtime >= -37.5:
                     print("300 / ", inputtime)
                     last_hit = hit300
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "300"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "300")
                     combo += 1
                     k3list.pop(0)
-                elif inputtime <= 70.5 and inputtime >= - 70.5:
+                elif inputtime <= 70.5 and inputtime >= -70.5:
                     print("200 / ", inputtime)
                     last_hit = hit200
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "200"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "200")
                     combo += 1
                     k3list.pop(0)
-                elif inputtime <= 100.5 and inputtime >= - 100.5:
+                elif inputtime <= 100.5 and inputtime >= -100.5:
                     print("100 / ", inputtime)
                     last_hit = hit100
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "100"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "100")
                     combo += 1
                     k3list.pop(0)
-                elif inputtime <= 124.5 and inputtime >= - 124.5:
+                elif inputtime <= 124.5 and inputtime >= -124.5:
                     print("50 / ", inputtime)
                     last_hit = hit50
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "50"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "50")
                     combo += 1
                     k3list.pop(0)
             print(score)
@@ -282,39 +297,39 @@ while running:
             pressedkey[3] = True
             if len(k4list) != 0:  # 16.5 ms 내
                 inputtime = gametime - k4list[0].starttime
-                if inputtime <= 16.5 and inputtime >= - 16.5:
+                if inputtime <= 16.5 and inputtime >= -16.5:
                     print("MAX / ", inputtime)
                     last_hit = hit300g
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "MAX"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "MAX")
                     combo += 1
                     k4list.pop(0)
-                elif inputtime <= 37.5 and inputtime >= - 37.5:
+                elif inputtime <= 37.5 and inputtime >= -37.5:
                     print("300 / ", inputtime)
                     last_hit = hit300
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "300"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "300")
                     combo += 1
                     k4list.pop(0)
-                elif inputtime <= 70.5 and inputtime >= - 70.5:
+                elif inputtime <= 70.5 and inputtime >= -70.5:
                     print("200 / ", inputtime)
                     last_hit = hit200
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "200"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "200")
                     combo += 1
                     k4list.pop(0)
-                elif inputtime <= 100.5 and inputtime >= - 100.5:
+                elif inputtime <= 100.5 and inputtime >= -100.5:
                     print("100 / ", inputtime)
                     last_hit = hit100
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "100"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "100")
                     combo += 1
                     k4list.pop(0)
-                elif inputtime <= 124.5 and inputtime >= - 124.5:
+                elif inputtime <= 124.5 and inputtime >= -124.5:
                     print("50 / ", inputtime)
                     last_hit = hit50
-                    exposure_time = 500
-                    score += (EXscore(MaxScore, TotalNotes, "50"))
+                    last_accuracy_exposure_time = 500
+                    score += EXscore(MaxScore, TotalNotes, "50")
                     combo += 1
                     k4list.pop(0)
             print(score)
@@ -337,13 +352,13 @@ while running:
         # gametime 이 [생성전 대기중인 노트리스트] 0번의 스폰시간을 넘었으면
         if len(notelist) != 0:
             if gametime >= notelist[0].starttime - duration:
-                if notelist[0].key == 0:
+                if notelist[0].key_index == 0:
                     k1list.append(notelist.pop(0))  # 해당하는 키 리스트에 넣는다
-                elif notelist[0].key == 1:
+                elif notelist[0].key_index == 1:
                     k2list.append(notelist.pop(0))
-                elif notelist[0].key == 2:
+                elif notelist[0].key_index == 2:
                     k3list.append(notelist.pop(0))
-                elif notelist[0].key == 3:
+                elif notelist[0].key_index == 3:
                     k4list.append(notelist.pop(0))
 
         screen.fill((0, 0, 0))  # 화면 검은색으로 채우기
@@ -351,8 +366,8 @@ while running:
         screen.blit(stageright, (600, 0))  # UI 불러오기
         screen.blit(stageleft, (0, 0))  # UI 불러오기
 
-        if exposure_time > 0:
-            exposure_time -= clock.get_time()
+        if last_accuracy_exposure_time > 0:
+            last_accuracy_exposure_time -= clock.get_time()
             if last_hit == hit300g:
                 screen.blit(last_hit, (getmiddle_img(last_hit), 500))
             if last_hit == hit300:
@@ -368,105 +383,115 @@ while running:
         # 스코어의 위치 표시
         if combo > 0:
             for i in range(0, len(str(combo))):
-                screen.blit(scores[int(str(combo)[i])],
-                            (getmiddle_nums(i, len(str(combo))), 200))
+                screen.blit(
+                    scores[int(str(combo)[i])],
+                    (getmiddle_nums(i, len(str(combo))), 200),
+                )
 
         for i in k1list:
             # 노트 미스 처리
-            if i.notetype == 1 and gametime > i.endtime + 124.5:
+            if i.notetype == 1 and gametime > i.end_time + 124.5:
                 print("MISS / ", gametime - i.starttime)
                 last_hit = hit0
-                exposure_time = 500
+                last_accuracy_exposure_time = 500
                 combo = 0
                 k1list.remove(i)
             elif i.notetype == 0 and gametime > i.starttime + 124.5:
                 print("MISS / ", gametime - i.starttime)
                 last_hit = hit0
-                exposure_time = 500
+                last_accuracy_exposure_time = 500
                 combo = 0
                 k1list.remove(i)
             else:
                 # 시간으로 노트 움직이기 (따로 설명)
-                pos = 0 + perfectpos * \
-                    ((gametime - i.starttime + duration) / duration)
+                pos = 0 + perfect_position * (
+                    (gametime - i.starttime + duration) / duration
+                )
                 obj = pg.transform.scale(notepng1, (150, 50))
                 screen.blit(obj, (0, pos))
 
                 if i.notetype == 1:  # 롱노트이면
                     long_obj = pg.transform.scale(
-                        notepng1, (150, getHoldNoteSize(50, i.holdlength, duration)))
+                        notepng1, (150, getHoldNoteSize(50, i.hold_length, duration))
+                    )
                     screen.blit(long_obj, (0, pos - 50 - long_obj.get_width()))
         for i in k2list:
-            if i.notetype == 1 and gametime > i.endtime + 124.5:
+            if i.notetype == 1 and gametime > i.end_time + 124.5:
                 print("MISS / ", gametime - i.starttime)
                 last_hit = hit0
-                exposure_time = 500
+                last_accuracy_exposure_time = 500
                 combo = 0
                 k2list.remove(i)
             elif i.notetype == 0 and gametime > i.starttime + 124.5:
                 print("MISS / ", gametime - i.starttime)
                 last_hit = hit0
-                exposure_time = 500
+                last_accuracy_exposure_time = 500
                 combo = 0
                 k2list.remove(i)
             else:
                 # 시간으로 노트 움직이기 (따로 설명)
-                pos = 0 + perfectpos * \
-                    ((gametime - i.starttime + duration) / duration)
+                pos = 0 + perfect_position * (
+                    (gametime - i.starttime + duration) / duration
+                )
                 obj = pg.transform.scale(notepng2, (150, 50))
                 screen.blit(obj, (150, pos))
 
                 if i.notetype == 1:  # 롱노트이면
                     long_obj = pg.transform.scale(
-                        notepng2, (150, getHoldNoteSize(50, i.holdlength, duration)))
+                        notepng2, (150, getHoldNoteSize(50, i.hold_length, duration))
+                    )
                     screen.blit(long_obj, (0, pos - 50 - long_obj.get_width()))
         for i in k3list:
-            if i.notetype == 1 and gametime > i.endtime + 124.5:
+            if i.notetype == 1 and gametime > i.end_time + 124.5:
                 print("MISS / ", gametime - i.starttime)
                 last_hit = hit0
-                exposure_time = 500
+                last_accuracy_exposure_time = 500
                 combo = 0
                 k3list.remove(i)
             elif i.notetype == 0 and gametime > i.starttime + 124.5:
                 print("MISS / ", gametime - i.starttime)
                 last_hit = hit0
-                exposure_time = 500
+                last_accuracy_exposure_time = 500
                 combo = 0
                 k3list.remove(i)
             else:
                 # 시간으로 노트 움직이기 (따로 설명)
-                pos = 0 + perfectpos * \
-                    ((gametime - i.starttime + duration) / duration)
+                pos = 0 + perfect_position * (
+                    (gametime - i.starttime + duration) / duration
+                )
                 obj = pg.transform.scale(notepng2, (150, 50))
                 screen.blit(obj, (300, pos))
 
                 if i.notetype == 1:  # 롱노트이면
                     long_obj = pg.transform.scale(
-                        notepng2, (150, getHoldNoteSize(50, i.holdlength, duration)))
+                        notepng2, (150, getHoldNoteSize(50, i.hold_length, duration))
+                    )
                     screen.blit(long_obj, (0, pos - 50 - long_obj.get_width()))
         for i in k4list:
-            if i.notetype == 1 and gametime > i.endtime + 124.5:
+            if i.notetype == 1 and gametime > i.end_time + 124.5:
                 print("MISS / ", gametime - i.starttime)
                 last_hit = hit0
-                exposure_time = 500
+                last_accuracy_exposure_time = 500
                 combo = 0
                 k4list.remove(i)
             elif i.notetype == 0 and gametime > i.starttime + 124.5:
                 print("MISS / ", gametime - i.starttime)
                 last_hit = hit0
-                exposure_time = 500
+                last_accuracy_exposure_time = 500
                 combo = 0
                 k4list.remove(i)
             else:
                 # 시간으로 노트 움직이기 (따로 설명)
-                pos = 0 + perfectpos * \
-                    ((gametime - i.starttime + duration) / duration)
+                pos = 0 + perfect_position * (
+                    (gametime - i.starttime + duration) / duration
+                )
                 obj = pg.transform.scale(notepng1, (150, 50))
                 screen.blit(obj, (450, pos))
 
                 if i.notetype == 1:  # 롱노트이면
                     long_obj = pg.transform.scale(
-                        notepng1, (150, getHoldNoteSize(50, i.holdlength, duration)))
+                        notepng1, (150, getHoldNoteSize(50, i.hold_length, duration))
+                    )
                     screen.blit(long_obj, (0, pos - 50 - long_obj.get_width()))
         pg.display.update()
 
